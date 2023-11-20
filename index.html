@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aurinoflix</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Monoton&display=swap');
+
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('https://i.pinimg.com/originals/49/da/7d/49da7d8efab607e46a080cc5356509ea.jpg');
+            background-size: cover;
+            color: white;
+        }
+
+        #movie-form {
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            margin: 20px;
+            border-radius: 10px;
+        }
+
+        #movie-form h1 {
+            font-size: 2.5em;
+            color: #ff0000;
+            text-transform: uppercase;
+            font-family: 'Monoton', cursive;
+        }
+
+        #movie-form input[type="text"] {
+            margin: 10px 0;
+            padding: 10px;
+            width: 60%;
+            border-radius: 5px;
+            border: none;
+        }
+
+        #movie-form button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            background-color: #ff0000;
+            color: white;
+            cursor: pointer;
+        }
+
+        #movies {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .movie-card {
+            margin: 20px;
+            width: 200px;
+            border: 1px solid white;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.7);
+            transition: transform 0.3s;
+        }
+
+        .movie-card:hover {
+            transform: scale(1.05);
+        }
+
+        .movie-image {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .movie-link {
+            display: block;
+            margin-top: 10px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px;
+            background-color: #ff0000;
+            border-radius: 5px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-bar div {
+            height: 20px;
+            width: 50%;
+            background-color: #ff0000;
+        }
+    </style>
+</head>
+<body>
+
+<div id="movie-form">
+    <h1>Aurinoflix</h1>
+    <p>Qual seu filme favorito?</p>
+
+    <input type="text" id="image-url" placeholder="Insira o endereço da imagem">
+    <input type="text" id="movie-name" placeholder="Insira o nome do Filme">
+    <input type="text" id="movie-link" placeholder="Insira o link do Filme">
+
+    <button onclick="addMovie()">Adicionar Filme</button>
+</div>
+
+<div id='movies'>
+    <div class="movie-card">
+        <img src="https://jardimdasamericas.com.br/uploads/2023/09/capa-filme-os-mercenarios-4-6f8cd-large.png" class="movie-image">
+        <p>Mercanários 4</p>
+        <a href="https://sinalpublico.com/player3/serverf4hlb.php?vid=OMRCNRS04" target="_blank" class="movie-link">Assistir</a>
+        <div class="progress-bar">
+            <div></div>
+        </div>
+        <button onclick="removeMovie(this)">Remover</button>
+    </div>
+</div>
+
+<div id="current-date-time"></div>
+
+<script>
+    function addMovie() {
+        const imageUrl = document.getElementById('image-url').value;
+        const movieName = document.getElementById('movie-name').value;
+        const movieLink = document.getElementById('movie-link').value;
+
+        const moviesDiv = document.getElementById('movies');
+
+        const movieCard = document.createElement('div');
+        movieCard.className = 'movie-card';
+
+        const movieImage = document.createElement('img');
+        movieImage.src = imageUrl;
+        movieImage.className = 'movie-image';
+
+        const movieTitle = document.createElement('p');
+        movieTitle.innerText = movieName;
+
+        const movieLinkElement = document.createElement('a');
+        movieLinkElement.href = movieLink;
+        movieLinkElement.target = '_blank';
+        movieLinkElement.innerText = 'Assistir';
+        movieLinkElement.className = 'movie-link';
+
+        const progressBar = document.createElement('div');
+        progressBar.className = 'progress-bar';
+        const progress = document.createElement('div');
+        progressBar.appendChild(progress);
+
+        const removeButton = document.createElement('button');
+        removeButton.innerText = 'Remover';
+        removeButton.onclick = function() {
+            moviesDiv.removeChild(movieCard);
+        };
+
+        movieCard.appendChild(movieImage);
+        movieCard.appendChild(movieTitle);
+        movieCard.appendChild(movieLinkElement);
+        movieCard.appendChild(progressBar);
+        movieCard.appendChild(removeButton);
+
+        moviesDiv.appendChild(movieCard);
+    }
+
+    function removeMovie(button) {
+        const movieCard = button.parentElement;
+        const moviesDiv = document.getElementById('movies');
+        moviesDiv.removeChild(movieCard);
+    }
+
+    function updateDateTime() {
+        const now = new Date();
+        const dateTimeString = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+        document.getElementById('current-date-time').innerText = dateTimeString;
+    }
+
+    setInterval(updateDateTime, 1000);
+</script>
+</body>
+</html>
