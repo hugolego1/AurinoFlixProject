@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -97,92 +98,167 @@
             width: 50%;
             background-color: #ff0000;
         }
+
+        #sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+
+        #sidebar a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
+
+        #sidebar a:hover {
+            color: #f1f1f1;
+        }
+
+        #sidebar .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
     </style>
 </head>
+
 <body>
 
-<div id="movie-form">
-    <h1>Aurinoflix</h1>
-    <p>Qual seu filme favorito?</p>
-
-    <input type="text" id="image-url" placeholder="Insira o endereço da imagem">
-    <input type="text" id="movie-name" placeholder="Insira o nome do Filme">
-    <input type="text" id="movie-link" placeholder="Insira o link do Filme">
-
-    <button onclick="addMovie()">Adicionar Filme</button>
-</div>
-
-<div id='movies'>
-    <div class="movie-card">
-        <img src="https://jardimdasamericas.com.br/uploads/2023/09/capa-filme-os-mercenarios-4-6f8cd-large.png" class="movie-image">
-        <p>Mercanários 4</p>
-        <a href="https://sinalpublico.com/player3/serverf4hlb.php?vid=OMRCNRS04" target="_blank" class="movie-link">Assistir</a>
-        <div class="progress-bar">
-            <div></div>
-        </div>
-        <button onclick="removeMovie(this)">Remover</button>
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+        <a href="#" onclick="removeAllMovies()">Remover Todos</a>
     </div>
-</div>
 
-<div id="current-date-time"></div>
+    <div id="movie-form">
+        <h1>Aurinoflix</h1>
+        <p>Qual seu filme favorito?</p>
 
-<script>
-    function addMovie() {
-        const imageUrl = document.getElementById('image-url').value;
-        const movieName = document.getElementById('movie-name').value;
-        const movieLink = document.getElementById('movie-link').value;
+        <input type="text" id="image-url" placeholder="Insira o endereço da imagem">
+        <input type="text" id="movie-name" placeholder="Insira o nome do Filme">
+        <input type="text" id="movie-link" placeholder="Insira o link do Filme">
 
-        const moviesDiv = document.getElementById('movies');
+        <button onclick="addMovie()">Adicionar Filme</button>
+    </div>
 
-        const movieCard = document.createElement('div');
-        movieCard.className = 'movie-card';
+    <div id='movies'>
+        <div class="movie-card">
+            <img src="https://jardimdasamericas.com.br/uploads/2023/09/capa-filme-os-mercenarios-4-6f8cd-large.png"
+                class="movie-image">
+            <p>Mercanários 4</p>
+            <a href="https://sinalpublico.com/player3/serverf4hlb.php?vid=OMRCNRS04" target="_blank"
+                class="movie-link">Assistir</a>
+            <div class="progress-bar">
+                <div></div>
+            </div>
+            <button onclick="removeMovie(this)">Remover</button>
+        </div>
+    </div>
 
-        const movieImage = document.createElement('img');
-        movieImage.src = imageUrl;
-        movieImage.className = 'movie-image';
+    <div id="current-date-time"></div>
 
-        const movieTitle = document.createElement('p');
-        movieTitle.innerText = movieName;
+    <!-- Botão para abrir o menu lateral -->
+    <span style="font-size:30px;cursor:pointer" onclick="openNav()">☰</span>
 
-        const movieLinkElement = document.createElement('a');
-        movieLinkElement.href = movieLink;
-        movieLinkElement.target = '_blank';
-        movieLinkElement.innerText = 'Assistir';
-        movieLinkElement.className = 'movie-link';
+    <script>
+        function addMovie() {
+            const imageUrl = document.getElementById('image-url').value;
+            const movieName = document.getElementById('movie-name').value;
+            const movieLink = document.getElementById('movie-link').value;
 
-        const progressBar = document.createElement('div');
-        progressBar.className = 'progress-bar';
-        const progress = document.createElement('div');
-        progressBar.appendChild(progress);
+            if (!imageUrl || !movieName || !movieLink) {
+                alert("Por favor, preencha todos os campos.");
+                return;
+            }
 
-        const removeButton = document.createElement('button');
-        removeButton.innerText = 'Remover';
-        removeButton.onclick = function() {
+            const moviesDiv = document.getElementById('movies');
+
+            const movieCard = document.createElement('div');
+            movieCard.className = 'movie-card';
+
+            const movieImage = document.createElement('img');
+            movieImage.src = imageUrl;
+            movieImage.className = 'movie-image';
+
+            const movieTitle = document.createElement('p');
+            movieTitle.innerText = movieName;
+
+            const movieLinkElement = document.createElement('a');
+            movieLinkElement.href = movieLink;
+            movieLinkElement.target = '_blank';
+            movieLinkElement.innerText = 'Assistir';
+            movieLinkElement.className = 'movie-link';
+
+            const progressBar = document.createElement('div');
+            progressBar.className = 'progress-bar';
+            const progress = document.createElement('div');
+            progressBar.appendChild(progress);
+
+            const removeButton = document.createElement('button');
+            removeButton.innerText = 'Remover';
+            removeButton.onclick = function () {
+                moviesDiv.removeChild(movieCard);
+            };
+
+            movieCard.appendChild(movieImage);
+            movieCard.appendChild(movieTitle);
+            movieCard.appendChild(movieLinkElement);
+            movieCard.appendChild(progressBar);
+            movieCard.appendChild(removeButton);
+
+            moviesDiv.appendChild(movieCard);
+
+            // Limpar os campos após adicionar um filme
+            clearFields();
+        }
+
+        function removeMovie(button) {
+            const movieCard = button.parentElement;
+            const moviesDiv = document.getElementById('movies');
             moviesDiv.removeChild(movieCard);
-        };
+        }
 
-        movieCard.appendChild(movieImage);
-        movieCard.appendChild(movieTitle);
-        movieCard.appendChild(movieLinkElement);
-        movieCard.appendChild(progressBar);
-        movieCard.appendChild(removeButton);
+        function removeAllMovies() {
+            const moviesDiv = document.getElementById('movies');
+            moviesDiv.innerHTML = ''; // Remove todos os filmes
+            closeNav(); // Fecha o menu lateral após remover todos os filmes
+        }
 
-        moviesDiv.appendChild(movieCard);
-    }
+        function clearFields() {
+            document.getElementById('image-url').value = '';
+            document.getElementById('movie-name').value = '';
+            document.getElementById('movie-link').value = '';
+        }
 
-    function removeMovie(button) {
-        const movieCard = button.parentElement;
-        const moviesDiv = document.getElementById('movies');
-        moviesDiv.removeChild(movieCard);
-    }
+        function openNav() {
+            document.getElementById("sidebar").style.width = "250px";
+        }
 
-    function updateDateTime() {
-        const now = new Date();
-        const dateTimeString = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
-        document.getElementById('current-date-time').innerText = dateTimeString;
-    }
+        function closeNav() {
+            document.getElementById("sidebar").style.width = "0";
+        }
 
-    setInterval(updateDateTime, 1000);
-</script>
+        function updateDateTime() {
+            const now = new Date();
+            const dateTimeString = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+            document.getElementById('current-date-time').innerText = dateTimeString;
+        }
+
+        setInterval(updateDateTime, 1000);
+    </script>
 </body>
+
 </html>
